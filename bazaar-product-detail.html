@@ -1,0 +1,1619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Product Detail — Bazaar</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --orange: #FF5722;
+    --orange-light: #FF7043;
+    --orange-dark: #E64A19;
+    --teal: #00897B;
+    --teal-light: #26A69A;
+    --navy: #0D1B2A;
+    --navy-mid: #1A2E42;
+    --gray-bg: #F5F5F2;
+    --gray-light: #EBEBEB;
+    --gray-mid: #B0B0A8;
+    --text: #1A1A1A;
+    --text-muted: #666660;
+    --white: #FFFFFF;
+    --card-radius: 12px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--gray-bg);
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  /* TOPBAR */
+  .topbar {
+    background: var(--navy);
+    color: rgba(255,255,255,0.7);
+    font-size: 12px;
+    padding: 6px 0;
+    text-align: center;
+  }
+  .topbar span { color: var(--orange-light); font-weight: 500; }
+
+  /* HEADER */
+  header {
+    background: var(--white);
+    border-bottom: 1.5px solid var(--gray-light);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+  .header-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 26px;
+    color: var(--orange);
+    text-decoration: none;
+    letter-spacing: -1px;
+    flex-shrink: 0;
+  }
+  .logo span { color: var(--navy); }
+  .search-wrap {
+    flex: 1;
+    display: flex;
+    background: var(--gray-bg);
+    border: 1.5px solid var(--gray-light);
+    border-radius: 10px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .search-wrap:focus-within { border-color: var(--orange); }
+  .search-input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    padding: 11px 16px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: var(--text);
+    outline: none;
+  }
+  .search-btn {
+    background: var(--orange);
+    color: white;
+    border: none;
+    padding: 0 22px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.2s;
+  }
+  .search-btn:hover { background: var(--orange-dark); }
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+  .hbtn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: 6px 12px;
+    border-radius: 8px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-muted);
+    transition: background 0.15s, color 0.15s;
+  }
+  .hbtn:hover { background: var(--gray-bg); color: var(--orange); }
+  .hbtn svg { width: 20px; height: 20px; }
+  .hbtn-sell {
+    background: var(--orange);
+    color: white !important;
+    border-radius: 8px;
+    padding: 8px 18px;
+    font-size: 13px;
+    font-weight: 600;
+    gap: 0;
+    flex-direction: row;
+  }
+  .hbtn-sell:hover { background: var(--orange-dark) !important; }
+  .cart-badge { position: relative; display: inline-block; }
+  .badge-dot {
+    position: absolute;
+    top: -4px; right: -4px;
+    background: var(--orange);
+    color: white;
+    font-size: 9px;
+    font-weight: 700;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* NAV */
+  nav {
+    background: var(--navy);
+    border-bottom: 2px solid var(--orange);
+  }
+  .nav-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .nav-inner::-webkit-scrollbar { display: none; }
+  .nav-link {
+    color: rgba(255,255,255,0.75);
+    text-decoration: none;
+    padding: 12px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    white-space: nowrap;
+    transition: color 0.15s, background 0.15s;
+  }
+  .nav-link:hover { color: white; background: rgba(255,255,255,0.08); }
+
+  /* BREADCRUMB */
+  .breadcrumb {
+    max-width: 1200px;
+    margin: 16px auto 0;
+    padding: 0 24px;
+    font-size: 12px;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .breadcrumb a {
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+  .breadcrumb a:hover { color: var(--orange); }
+  .breadcrumb .sep { color: var(--gray-mid); }
+  .breadcrumb .current { color: var(--text); font-weight: 500; }
+
+  /* MAIN PRODUCT LAYOUT */
+  .product-layout {
+    max-width: 1200px;
+    margin: 16px auto 0;
+    padding: 0 24px;
+    display: grid;
+    grid-template-columns: 480px 1fr;
+    gap: 28px;
+    align-items: start;
+  }
+
+  /* IMAGE GALLERY */
+  .gallery {
+    position: sticky;
+    top: 80px;
+  }
+  .main-img {
+    background: var(--white);
+    border-radius: var(--card-radius);
+    border: 1px solid var(--gray-light);
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 160px;
+    margin-bottom: 12px;
+    overflow: hidden;
+    position: relative;
+    cursor: zoom-in;
+    transition: box-shadow 0.2s;
+  }
+  .main-img:hover { box-shadow: 0 8px 32px rgba(0,0,0,0.12); }
+  .img-zoom-hint {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    background: rgba(0,0,0,0.4);
+    color: white;
+    font-size: 11px;
+    padding: 4px 8px;
+    border-radius: 6px;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .main-img:hover .img-zoom-hint { opacity: 1; }
+  .thumb-row {
+    display: flex;
+    gap: 8px;
+  }
+  .thumb {
+    flex: 1;
+    background: var(--white);
+    border: 2px solid var(--gray-light);
+    border-radius: 8px;
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    cursor: pointer;
+    transition: border-color 0.15s;
+  }
+  .thumb:hover, .thumb.active { border-color: var(--orange); }
+
+  /* PRODUCT INFO PANEL */
+  .product-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .pi-brand {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--teal);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+  }
+  .pi-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 22px;
+    color: var(--navy);
+    line-height: 1.3;
+    margin-bottom: 10px;
+  }
+  .pi-rating {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
+    font-size: 13px;
+  }
+  .stars { color: #FFC107; }
+  .rating-count { color: var(--text-muted); }
+  .rating-sold { color: var(--text-muted); border-left: 1px solid var(--gray-light); padding-left: 8px; }
+
+  /* PRICE BLOCK */
+  .price-block {
+    background: #FFF8F5;
+    border: 1px solid #FFD5C8;
+    border-radius: var(--card-radius);
+    padding: 16px 20px;
+    margin-bottom: 18px;
+  }
+  .price-row {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .pi-price-now {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 32px;
+    color: var(--orange);
+  }
+  .pi-price-old {
+    font-size: 16px;
+    color: var(--gray-mid);
+    text-decoration: line-through;
+  }
+  .pi-discount {
+    background: var(--orange);
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 20px;
+  }
+  .price-saving {
+    margin-top: 6px;
+    font-size: 13px;
+    color: var(--teal);
+    font-weight: 500;
+  }
+
+  /* VARIANTS */
+  .variant-section { margin-bottom: 18px; }
+  .variant-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+  .variant-pills {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .vpill {
+    border: 1.5px solid var(--gray-light);
+    background: var(--white);
+    border-radius: 8px;
+    padding: 7px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+    color: var(--text);
+  }
+  .vpill:hover { border-color: var(--orange); color: var(--orange); }
+  .vpill.selected { border-color: var(--orange); background: #FFF3EF; color: var(--orange); }
+  .vpill.unavailable { opacity: 0.4; cursor: not-allowed; text-decoration: line-through; }
+
+  /* QTY */
+  .qty-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+  .qty-label { font-size: 13px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.3px; }
+  .qty-ctrl {
+    display: flex;
+    align-items: center;
+    border: 1.5px solid var(--gray-light);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .qty-btn {
+    background: var(--gray-bg);
+    border: none;
+    width: 36px; height: 36px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background 0.15s;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .qty-btn:hover { background: #FFE5DC; color: var(--orange); }
+  .qty-val {
+    width: 48px;
+    text-align: center;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    border: none;
+    background: white;
+    outline: none;
+    color: var(--navy);
+    border-left: 1.5px solid var(--gray-light);
+    border-right: 1.5px solid var(--gray-light);
+    height: 36px;
+  }
+  .stock-info {
+    font-size: 12px;
+    color: var(--teal);
+    font-weight: 500;
+  }
+  .stock-low { color: #E53935; }
+
+  /* ACTION BUTTONS */
+  .action-btns {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .btn-cart {
+    flex: 1;
+    background: var(--white);
+    color: var(--orange);
+    border: 2px solid var(--orange);
+    padding: 14px;
+    border-radius: 10px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+  }
+  .btn-cart:hover { background: #FFF3EF; }
+  .btn-buy {
+    flex: 1;
+    background: var(--orange);
+    color: white;
+    border: 2px solid var(--orange);
+    padding: 14px;
+    border-radius: 10px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+  }
+  .btn-buy:hover { background: var(--orange-dark); border-color: var(--orange-dark); }
+  .btn-wish {
+    background: var(--white);
+    border: 1.5px solid var(--gray-light);
+    padding: 14px 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 20px;
+    transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .btn-wish:hover { border-color: #E91E63; background: #FFF0F5; }
+
+  /* DELIVERY INFO */
+  .delivery-box {
+    background: var(--white);
+    border: 1px solid var(--gray-light);
+    border-radius: var(--card-radius);
+    padding: 16px;
+    margin-bottom: 18px;
+  }
+  .delivery-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--gray-light);
+    font-size: 13px;
+  }
+  .delivery-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .delivery-row:first-child { padding-top: 0; }
+  .di-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+  .di-label { font-weight: 600; color: var(--navy); margin-bottom: 2px; }
+  .di-sub { color: var(--text-muted); }
+
+  /* SELLER INFO */
+  .seller-box {
+    background: var(--white);
+    border: 1px solid var(--gray-light);
+    border-radius: var(--card-radius);
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 18px;
+  }
+  .seller-avatar {
+    width: 48px; height: 48px;
+    background: var(--navy);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    color: white;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .seller-name { font-weight: 600; font-size: 14px; color: var(--navy); margin-bottom: 2px; }
+  .seller-meta { font-size: 12px; color: var(--text-muted); }
+  .seller-meta span { color: var(--teal); font-weight: 600; }
+  .seller-chat {
+    margin-left: auto;
+    background: var(--navy);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+    white-space: nowrap;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .seller-chat:hover { background: var(--navy-mid); }
+
+  /* TABS */
+  .tabs-wrap {
+    max-width: 1200px;
+    margin: 28px auto 0;
+    padding: 0 24px;
+  }
+  .tabs {
+    display: flex;
+    border-bottom: 2px solid var(--gray-light);
+    margin-bottom: 20px;
+    gap: 0;
+  }
+  .tab {
+    padding: 12px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .tab:hover { color: var(--orange); }
+  .tab.active { color: var(--orange); border-bottom-color: var(--orange); font-weight: 600; }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* SPECS TABLE */
+  .specs-table {
+    background: var(--white);
+    border-radius: var(--card-radius);
+    border: 1px solid var(--gray-light);
+    overflow: hidden;
+  }
+  .spec-row {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    border-bottom: 1px solid var(--gray-light);
+    font-size: 13px;
+  }
+  .spec-row:last-child { border-bottom: none; }
+  .spec-key {
+    padding: 12px 16px;
+    background: var(--gray-bg);
+    color: var(--text-muted);
+    font-weight: 500;
+    border-right: 1px solid var(--gray-light);
+  }
+  .spec-val {
+    padding: 12px 16px;
+    color: var(--text);
+  }
+
+  /* DESCRIPTION */
+  .desc-content {
+    background: var(--white);
+    border-radius: var(--card-radius);
+    border: 1px solid var(--gray-light);
+    padding: 20px 24px;
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--text);
+  }
+  .desc-content h3 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--navy);
+    margin-bottom: 10px;
+    margin-top: 16px;
+  }
+  .desc-content h3:first-child { margin-top: 0; }
+  .desc-content ul { padding-left: 20px; }
+  .desc-content li { margin-bottom: 6px; color: var(--text-muted); }
+
+  /* REVIEWS */
+  .reviews-summary {
+    background: var(--white);
+    border-radius: var(--card-radius);
+    border: 1px solid var(--gray-light);
+    padding: 20px 24px;
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    gap: 24px;
+    margin-bottom: 16px;
+  }
+  .rating-big {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border-right: 1px solid var(--gray-light);
+    padding-right: 24px;
+  }
+  .rating-num {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 52px;
+    color: var(--navy);
+    line-height: 1;
+  }
+  .rating-stars-big { font-size: 20px; color: #FFC107; margin: 4px 0; }
+  .rating-total { font-size: 12px; color: var(--text-muted); }
+  .rating-bars { display: flex; flex-direction: column; gap: 6px; justify-content: center; }
+  .bar-row { display: flex; align-items: center; gap: 8px; font-size: 12px; }
+  .bar-label { width: 40px; color: var(--text-muted); text-align: right; }
+  .bar-track {
+    flex: 1;
+    height: 6px;
+    background: var(--gray-light);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .bar-fill { height: 100%; background: #FFC107; border-radius: 3px; }
+  .bar-count { width: 30px; color: var(--text-muted); }
+
+  .review-card {
+    background: var(--white);
+    border-radius: var(--card-radius);
+    border: 1px solid var(--gray-light);
+    padding: 16px 20px;
+    margin-bottom: 12px;
+  }
+  .review-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .review-avatar {
+    width: 36px; height: 36px;
+    background: var(--navy);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: white;
+    font-weight: 700;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+  .review-name { font-weight: 600; font-size: 13px; }
+  .review-date { font-size: 11px; color: var(--text-muted); }
+  .review-stars { color: #FFC107; font-size: 13px; margin-bottom: 2px; }
+  .review-badge {
+    margin-left: auto;
+    background: #E8F5E9;
+    color: #2E7D32;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 20px;
+  }
+  .review-text { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+
+  /* RELATED PRODUCTS */
+  .related-section {
+    max-width: 1200px;
+    margin: 32px auto 0;
+    padding: 0 24px 40px;
+  }
+  .related-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 20px;
+    color: var(--navy);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .related-title::before {
+    content: '';
+    display: block;
+    width: 4px; height: 22px;
+    background: var(--orange);
+    border-radius: 2px;
+  }
+  .related-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 14px;
+  }
+  .product-card {
+    background: var(--white);
+    border-radius: var(--card-radius);
+    overflow: hidden;
+    border: 1px solid var(--gray-light);
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+    position: relative;
+  }
+  .product-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+  }
+  .product-card:hover .add-cart { opacity: 1; transform: translateY(0); }
+  .pc-img {
+    width: 100%;
+    aspect-ratio: 1;
+    background: var(--gray-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 56px;
+    position: relative;
+  }
+  .pc-badge {
+    position: absolute;
+    top: 8px; left: 8px;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 7px;
+    border-radius: 6px;
+    text-transform: uppercase;
+  }
+  .badge-sale { background: var(--orange); color: white; }
+  .badge-new { background: var(--teal); color: white; }
+  .badge-hot { background: #E91E63; color: white; }
+  .pc-info { padding: 10px 12px; }
+  .pc-name {
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-bottom: 6px;
+    min-height: 36px;
+  }
+  .pc-price { display: flex; align-items: baseline; gap: 6px; flex-wrap: wrap; }
+  .price-now { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 16px; color: var(--orange); }
+  .price-old { font-size: 12px; color: var(--gray-mid); text-decoration: line-through; }
+  .price-off { font-size: 11px; font-weight: 600; color: var(--teal); }
+  .pc-rating { display: flex; align-items: center; gap: 4px; margin-top: 5px; font-size: 11px; color: var(--text-muted); }
+  .add-cart {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    background: var(--orange);
+    color: white;
+    border: none;
+    padding: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity 0.2s, transform 0.2s;
+  }
+
+  /* NOTIFICATION */
+  .notif {
+    position: fixed;
+    bottom: 24px; right: 24px;
+    background: var(--navy);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 500;
+    z-index: 400;
+    transform: translateY(80px);
+    opacity: 0;
+    transition: all 0.3s;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .notif.show { transform: translateY(0); opacity: 1; }
+
+  /* CART SIDEBAR */
+  .dim { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 250; }
+  .dim.open { display: block; }
+  .cart-sidebar {
+    position: fixed;
+    right: -400px; top: 0; bottom: 0;
+    width: 380px;
+    background: white;
+    z-index: 300;
+    box-shadow: -4px 0 20px rgba(0,0,0,0.1);
+    transition: right 0.3s ease;
+    display: flex;
+    flex-direction: column;
+  }
+  .cart-sidebar.open { right: 0; }
+  .cart-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--gray-light);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .cart-header h3 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 18px; }
+  .cart-body { flex: 1; overflow-y: auto; padding: 16px 24px; }
+  .cart-item { display: flex; gap: 12px; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--gray-light); }
+  .ci-emoji { font-size: 36px; background: var(--gray-bg); border-radius: 8px; padding: 8px 12px; }
+  .ci-info { flex: 1; }
+  .ci-name { font-size: 13px; font-weight: 500; margin-bottom: 4px; }
+  .ci-price { font-family: 'Syne', sans-serif; font-weight: 700; color: var(--orange); }
+  .ci-remove { background: none; border: none; color: var(--gray-mid); cursor: pointer; font-size: 16px; }
+  .ci-remove:hover { color: #E53935; }
+  .cart-footer { padding: 16px 24px; border-top: 1px solid var(--gray-light); }
+  .cart-total { display: flex; justify-content: space-between; margin-bottom: 12px; font-weight: 600; }
+  .cart-checkout {
+    width: 100%;
+    background: var(--orange);
+    color: white;
+    border: none;
+    padding: 14px;
+    border-radius: 8px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .cart-checkout:hover { background: var(--orange-dark); }
+  .modal-close {
+    background: var(--gray-bg);
+    border: none;
+    border-radius: 50%;
+    width: 30px; height: 30px;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  @media (max-width: 900px) {
+    .product-layout { grid-template-columns: 1fr; }
+    .gallery { position: static; }
+    .related-grid { grid-template-columns: repeat(3, 1fr); }
+    .reviews-summary { grid-template-columns: 1fr; }
+    .rating-big { border-right: none; border-bottom: 1px solid var(--gray-light); padding-right: 0; padding-bottom: 16px; }
+  }
+  @media (max-width: 600px) {
+    .related-grid { grid-template-columns: repeat(2, 1fr); }
+    .action-btns { flex-wrap: wrap; }
+    .btn-cart, .btn-buy { flex: 1 1 45%; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  🎉 Free delivery on orders above <span>Rs. 999</span> &nbsp;|&nbsp; Use code <span>BAZAAR20</span> for 20% off
+</div>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <a href="bazaar-marketplace.html" class="logo">Bazaar<span>.</span></a>
+    <div class="search-wrap">
+      <input class="search-input" type="text" placeholder="Search for products, brands and more...">
+      <button class="search-btn" onclick="showNotif('🔍 Searching...')">🔍</button>
+    </div>
+    <div class="header-actions">
+      <button class="hbtn" onclick="showNotif('👤 Opening sign in...')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Sign In
+      </button>
+      <button class="hbtn" onclick="showNotif('❤️ Added to Wishlist!')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        Wishlist
+      </button>
+      <button class="hbtn" onclick="openCart()">
+        <div class="cart-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+          <span class="badge-dot" id="cartCount">0</span>
+        </div>
+        Cart
+      </button>
+      <button class="hbtn hbtn-sell" onclick="window.location.href='bazaar-seller.html'">+ Sell / Post Ad</button>
+    </div>
+  </div>
+</header>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a class="nav-link" href="bazaar-marketplace.html">🏠 Home</a>
+    <a class="nav-link" href="#">📱 Mobiles</a>
+    <a class="nav-link" href="#">💻 Electronics</a>
+    <a class="nav-link" href="#">👗 Fashion</a>
+    <a class="nav-link" href="#">🏠 Home &amp; Living</a>
+    <a class="nav-link" href="#">🚗 Vehicles</a>
+    <a class="nav-link" href="#">🏡 Property</a>
+    <a class="nav-link" href="#">⚽ Sports</a>
+    <a class="nav-link" href="#">📚 Books</a>
+  </div>
+</nav>
+
+<!-- BREADCRUMB -->
+<div class="breadcrumb" id="breadcrumb">
+  <a href="bazaar-marketplace.html">Home</a>
+  <span class="sep">›</span>
+  <a href="#">Electronics</a>
+  <span class="sep">›</span>
+  <span class="current" id="bc-name">Loading...</span>
+</div>
+
+<!-- PRODUCT LAYOUT -->
+<div class="product-layout">
+
+  <!-- GALLERY -->
+  <div class="gallery">
+    <div class="main-img" id="mainImg">
+      <span id="mainEmoji">📱</span>
+      <div class="img-zoom-hint">🔍 Zoom</div>
+    </div>
+    <div class="thumb-row" id="thumbRow"></div>
+  </div>
+
+  <!-- PRODUCT INFO -->
+  <div class="product-info">
+    <div class="pi-brand" id="piBrand">Brand</div>
+    <div class="pi-title" id="piTitle">Product Title</div>
+
+    <div class="pi-rating">
+      <span class="stars" id="piStars">★★★★★</span>
+      <span id="piRatingVal">4.8</span>
+      <span class="rating-count" id="piRatingCount">(2,100 reviews)</span>
+      <span class="rating-sold" id="piSold">1,200+ sold</span>
+    </div>
+
+    <div class="price-block">
+      <div class="price-row">
+        <span class="pi-price-now" id="piPriceNow">Rs. 329,999</span>
+        <span class="pi-price-old" id="piPriceOld">Rs. 389,999</span>
+        <span class="pi-discount" id="piDiscount">-15%</span>
+      </div>
+      <div class="price-saving" id="piSaving">You save Rs. 60,000!</div>
+    </div>
+
+    <!-- STORAGE VARIANTS -->
+    <div class="variant-section" id="storageSection">
+      <div class="variant-label" id="variantLabel1">Storage</div>
+      <div class="variant-pills" id="storagePills"></div>
+    </div>
+
+    <!-- COLOR VARIANTS -->
+    <div class="variant-section" id="colorSection">
+      <div class="variant-label">Color</div>
+      <div class="variant-pills" id="colorPills"></div>
+    </div>
+
+    <!-- QTY -->
+    <div class="qty-row">
+      <div class="qty-label">Qty</div>
+      <div class="qty-ctrl">
+        <button class="qty-btn" onclick="changeQty(-1)">−</button>
+        <input class="qty-val" id="qtyVal" type="number" value="1" min="1" max="10" readonly>
+        <button class="qty-btn" onclick="changeQty(1)">+</button>
+      </div>
+      <span class="stock-info" id="stockInfo">✓ In Stock</span>
+    </div>
+
+    <!-- ACTIONS -->
+    <div class="action-btns">
+      <button class="btn-cart" id="btnCart" onclick="handleAddToCart()">🛒 Add to Cart</button>
+      <button class="btn-buy" onclick="showNotif('💳 Redirecting to checkout...')">⚡ Buy Now</button>
+      <button class="btn-wish" onclick="showNotif('❤️ Added to Wishlist!')">♡</button>
+    </div>
+
+    <!-- DELIVERY -->
+    <div class="delivery-box">
+      <div class="delivery-row">
+        <div class="di-icon">🚚</div>
+        <div>
+          <div class="di-label">Free Delivery</div>
+          <div class="di-sub">Estimated delivery: 2–4 business days</div>
+        </div>
+      </div>
+      <div class="delivery-row">
+        <div class="di-icon">🔄</div>
+        <div>
+          <div class="di-label">15-Day Easy Returns</div>
+          <div class="di-sub">No questions asked return policy</div>
+        </div>
+      </div>
+      <div class="delivery-row">
+        <div class="di-icon">🛡️</div>
+        <div>
+          <div class="di-label" id="warrantyLabel">1-Year Warranty</div>
+          <div class="di-sub">Official brand warranty included</div>
+        </div>
+      </div>
+      <div class="delivery-row">
+        <div class="di-icon">💳</div>
+        <div>
+          <div class="di-label">Secure Payment</div>
+          <div class="di-sub">EasyPaisa, JazzCash, Bank Transfer, COD</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SELLER -->
+    <div class="seller-box">
+      <div class="seller-avatar" id="sellerAvatar">B</div>
+      <div>
+        <div class="seller-name" id="sellerName">Bazaar Official Store</div>
+        <div class="seller-meta"><span>98.5%</span> Positive Ratings · 4.2k Sales · Member since 2020</div>
+      </div>
+      <button class="seller-chat" onclick="showNotif('💬 Opening chat with seller...')">💬 Chat</button>
+    </div>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs-wrap">
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('desc', this)">Description</div>
+    <div class="tab" onclick="switchTab('specs', this)">Specifications</div>
+    <div class="tab" onclick="switchTab('reviews', this)">Reviews</div>
+  </div>
+
+  <!-- DESCRIPTION TAB -->
+  <div class="tab-content active" id="tab-desc">
+    <div class="desc-content" id="descContent">Loading description...</div>
+  </div>
+
+  <!-- SPECS TAB -->
+  <div class="tab-content" id="tab-specs">
+    <div class="specs-table" id="specsTable">Loading specifications...</div>
+  </div>
+
+  <!-- REVIEWS TAB -->
+  <div class="tab-content" id="tab-reviews">
+    <div class="reviews-summary">
+      <div class="rating-big">
+        <div class="rating-num" id="revAvg">4.8</div>
+        <div class="rating-stars-big">★★★★★</div>
+        <div class="rating-total" id="revTotal">2,100 ratings</div>
+      </div>
+      <div class="rating-bars">
+        <div class="bar-row"><span class="bar-label">5 ★</span><div class="bar-track"><div class="bar-fill" style="width:78%"></div></div><span class="bar-count">78%</span></div>
+        <div class="bar-row"><span class="bar-label">4 ★</span><div class="bar-track"><div class="bar-fill" style="width:14%"></div></div><span class="bar-count">14%</span></div>
+        <div class="bar-row"><span class="bar-label">3 ★</span><div class="bar-track"><div class="bar-fill" style="width:5%"></div></div><span class="bar-count">5%</span></div>
+        <div class="bar-row"><span class="bar-label">2 ★</span><div class="bar-track"><div class="bar-fill" style="width:2%"></div></div><span class="bar-count">2%</span></div>
+        <div class="bar-row"><span class="bar-label">1 ★</span><div class="bar-track"><div class="bar-fill" style="width:1%"></div></div><span class="bar-count">1%</span></div>
+      </div>
+    </div>
+
+    <div class="review-card">
+      <div class="review-header">
+        <div class="review-avatar">A</div>
+        <div>
+          <div class="review-name">Ahmed K.</div>
+          <div class="review-date">May 2024</div>
+        </div>
+        <span class="review-badge">✓ Verified Purchase</span>
+      </div>
+      <div class="review-stars">★★★★★</div>
+      <div class="review-text">Absolutely amazing product! Delivery was fast, packaging was perfect, and the product is exactly as described. Highly recommend buying from Bazaar — will definitely shop again.</div>
+    </div>
+    <div class="review-card">
+      <div class="review-header">
+        <div class="review-avatar" style="background:#00897B;">S</div>
+        <div>
+          <div class="review-name">Sara M.</div>
+          <div class="review-date">April 2024</div>
+        </div>
+        <span class="review-badge">✓ Verified Purchase</span>
+      </div>
+      <div class="review-stars">★★★★☆</div>
+      <div class="review-text">Great quality and good value for money. Delivery took 3 days which was acceptable. The product feels premium and well built. Minor issue with packaging but product itself is perfect.</div>
+    </div>
+    <div class="review-card">
+      <div class="review-header">
+        <div class="review-avatar" style="background:#E91E63;">U</div>
+        <div>
+          <div class="review-name">Usman R.</div>
+          <div class="review-date">March 2024</div>
+        </div>
+        <span class="review-badge">✓ Verified Purchase</span>
+      </div>
+      <div class="review-stars">★★★★★</div>
+      <div class="review-text">Wow! Way better than expected. The quality is top notch. Already recommended to 5 of my friends. Fast delivery and the Bazaar team responded quickly to my questions.</div>
+    </div>
+  </div>
+</div>
+
+<!-- RELATED PRODUCTS -->
+<div class="related-section">
+  <div class="related-title">You May Also Like</div>
+  <div class="related-grid" id="relatedGrid"></div>
+</div>
+
+<!-- CART SIDEBAR -->
+<div class="dim" id="dim" onclick="closeCart()"></div>
+<div class="cart-sidebar" id="cartSidebar">
+  <div class="cart-header">
+    <h3>🛒 My Cart (<span id="cartItemCount">0</span>)</h3>
+    <button class="modal-close" onclick="closeCart()">✕</button>
+  </div>
+  <div class="cart-body" id="cartBody">
+    <p style="text-align:center; color:var(--text-muted); margin-top:40px; font-size:14px;">Your cart is empty</p>
+  </div>
+  <div class="cart-footer">
+    <div class="cart-total"><span>Subtotal</span><span style="color:var(--orange);font-family:'Syne',sans-serif;font-size:18px" id="cartTotal">Rs. 0</span></div>
+    <button class="cart-checkout" onclick="closeCart();showNotif('💳 Proceeding to checkout...')">Proceed to Checkout →</button>
+  </div>
+</div>
+
+<!-- NOTIFICATION -->
+<div class="notif" id="notif">✅ Done!</div>
+
+<script>
+// ─── PRODUCT DATA ───────────────────────────────────────────────────────────
+const products = {
+  'iphone-15-pro': {
+    brand: 'Apple',
+    title: 'Apple iPhone 15 Pro 256GB Natural Titanium',
+    emoji: '📱',
+    thumbs: ['📱','📷','🔋','💿'],
+    priceNow: 329999, priceOld: 389999,
+    ratingVal: 4.8, ratingCount: '2,100', sold: '1.2k+',
+    variant1Label: 'Storage', variant1: ['128GB','256GB ✓','512GB','1TB'],
+    variant2Label: 'Color', variant2: ['Natural Titanium ✓','Black Titanium','White Titanium','Blue Titanium'],
+    stock: 'In Stock · 34 remaining',
+    warranty: '1-Year Apple Warranty',
+    seller: 'Apple Official Store', sellerInit: 'A',
+    description: `<h3>About This Product</h3><p>The iPhone 15 Pro is Apple's most powerful smartphone yet, featuring the revolutionary A17 Pro chip and a stunning titanium design that's both beautiful and incredibly strong.</p><h3>Key Features</h3><ul><li>A17 Pro chip with 6-core GPU for console-class gaming</li><li>Pro camera system: 48MP Main, 12MP Ultra Wide, 12MP 3x Telephoto</li><li>Up to 29 hours video playback</li><li>USB 3 speeds and ProRes video recording</li><li>Action Button fully customizable</li><li>Dynamic Island for notifications</li></ul><h3>What's in the Box</h3><p>iPhone 15 Pro, USB-C Cable (1m), Documentation</p>`,
+    specs: [
+      ['Display','6.1" Super Retina XDR OLED, 2556x1179, 460 ppi'],
+      ['Processor','A17 Pro chip, 6-core GPU'],
+      ['RAM','8GB'],
+      ['Storage','256GB'],
+      ['Rear Camera','48MP Main + 12MP Ultra Wide + 12MP 3x Telephoto'],
+      ['Front Camera','12MP TrueDepth'],
+      ['Battery','3274 mAh, 29hr video playback'],
+      ['OS','iOS 17'],
+      ['5G','Yes'],
+      ['Weight','187g'],
+      ['Dimensions','146.6 × 70.6 × 8.25 mm'],
+      ['Color','Natural Titanium'],
+    ],
+    related: ['samsung-s24','hp-pavilion','sony-xm5','casio-gshock','gopro-hero12'],
+  },
+  'samsung-s24': {
+    brand: 'Samsung',
+    title: 'Samsung Galaxy S24 Ultra 12GB/256GB Phantom Black',
+    emoji: '📲',
+    thumbs: ['📲','🖊️','📷','🔋'],
+    priceNow: 189999, priceOld: 219999,
+    ratingVal: 4.7, ratingCount: '1,800', sold: '980+',
+    variant1Label: 'Storage', variant1: ['256GB ✓','512GB','1TB'],
+    variant2Label: 'Color', variant2: ['Phantom Black ✓','Titanium Gray','Violet'],
+    stock: 'In Stock · 22 remaining',
+    warranty: '1-Year Samsung Warranty',
+    seller: 'Samsung Official', sellerInit: 'S',
+    description: `<h3>About This Product</h3><p>The Galaxy S24 Ultra is Samsung's ultimate flagship smartphone with built-in S Pen and AI-powered features powered by Galaxy AI.</p><h3>Key Features</h3><ul><li>Built-in S Pen with near-zero latency</li><li>200MP main camera with Space Zoom</li><li>Snapdragon 8 Gen 3 for Galaxy</li><li>5000 mAh battery with 45W fast charging</li><li>6.8" QHD+ Dynamic AMOLED 2X display</li><li>Galaxy AI features: Live Translate, Circle to Search</li></ul>`,
+    specs: [
+      ['Display','6.8" QHD+ Dynamic AMOLED 2X, 3088x1440, 505 ppi'],
+      ['Processor','Snapdragon 8 Gen 3 for Galaxy'],
+      ['RAM','12GB'],
+      ['Storage','256GB'],
+      ['Rear Camera','200MP Main + 12MP Ultra Wide + 10MP 3x + 50MP 5x'],
+      ['Front Camera','12MP'],
+      ['Battery','5000 mAh, 45W wired charging'],
+      ['OS','Android 14, One UI 6.1'],
+      ['5G','Yes'],
+      ['Weight','232g'],
+      ['S Pen','Built-in'],
+      ['Color','Phantom Black'],
+    ],
+    related: ['iphone-15-pro','sony-xm5','casio-gshock','hp-pavilion','gopro-hero12'],
+  },
+  'hp-pavilion': {
+    brand: 'HP',
+    title: 'HP Pavilion 15 Core i5 12th Gen 8GB 512GB SSD',
+    emoji: '💻',
+    thumbs: ['💻','⌨️','🖥️','🔌'],
+    priceNow: 89999, priceOld: 105000,
+    ratingVal: 4.4, ratingCount: '876', sold: '500+',
+    variant1Label: 'RAM', variant1: ['8GB ✓','16GB'],
+    variant2Label: 'Storage', variant2: ['512GB SSD ✓','1TB SSD'],
+    stock: 'In Stock · 18 remaining',
+    warranty: '1-Year HP Warranty',
+    seller: 'HP Authorized Dealer', sellerInit: 'H',
+    description: `<h3>About This Product</h3><p>The HP Pavilion 15 offers powerful performance for everyday computing, studies and work. Featuring the latest Intel Core i5 12th Gen processor and fast SSD storage.</p><h3>Key Features</h3><ul><li>Intel Core i5-1235U 12th Gen (up to 4.4GHz)</li><li>8GB DDR4 RAM (expandable to 32GB)</li><li>512GB NVMe SSD for fast boot and load times</li><li>15.6" Full HD IPS Anti-glare Display</li><li>Intel Iris Xe integrated graphics</li><li>Windows 11 Home pre-installed</li><li>Up to 8.5 hours battery life</li></ul>`,
+    specs: [
+      ['Display','15.6" FHD IPS Anti-glare 1920x1080'],
+      ['Processor','Intel Core i5-1235U 12th Gen'],
+      ['RAM','8GB DDR4-3200'],
+      ['Storage','512GB NVMe SSD'],
+      ['Graphics','Intel Iris Xe Graphics'],
+      ['OS','Windows 11 Home'],
+      ['Battery','41Wh, up to 8.5 hrs'],
+      ['Ports','2x USB-A, 1x USB-C, HDMI, SD Card, 3.5mm'],
+      ['Weight','1.75 kg'],
+      ['Color','Silver'],
+    ],
+    related: ['iphone-15-pro','samsung-s24','sony-xm5','casio-gshock','dyson-v15'],
+  },
+  'nike-air-max': {
+    brand: 'Nike',
+    title: 'Nike Air Max 270 React White/Black Running Shoes',
+    emoji: '👟',
+    thumbs: ['👟','👟','🏃','📦'],
+    priceNow: 24999, priceOld: 35000,
+    ratingVal: 4.9, ratingCount: '3,200', sold: '2.5k+',
+    variant1Label: 'Size (UK)', variant1: ['6','7','8 ✓','9','10','11'],
+    variant2Label: 'Color', variant2: ['White/Black ✓','Triple Black','White/Red'],
+    stock: 'In Stock',
+    warranty: '6-Month Warranty',
+    seller: 'Nike Official Store', sellerInit: 'N',
+    description: `<h3>About This Product</h3><p>The Nike Air Max 270 React combines two of Nike's most innovative technologies for a shoe that delivers extreme comfort and modern style.</p><h3>Key Features</h3><ul><li>270-degree Air unit in the heel for max cushioning</li><li>React foam midsole for light, bouncy comfort</li><li>Mesh upper for breathability</li><li>Rubber waffle outsole for grip and traction</li><li>Padded collar for ankle support</li></ul>`,
+    specs: [
+      ['Upper','Engineered mesh'],
+      ['Midsole','React foam + Air Max 270 unit'],
+      ['Outsole','Rubber waffle'],
+      ['Closure','Lace-up'],
+      ['Weight','~310g (size 8)'],
+      ['Type','Lifestyle / Running'],
+      ['Origin','Indonesia'],
+    ],
+    related: ['casio-gshock','levis-511','dyson-v15','iphone-15-pro','gopro-hero12'],
+  },
+  'sony-xm5': {
+    brand: 'Sony',
+    title: 'Sony WH-1000XM5 Wireless Noise Cancelling Headphones',
+    emoji: '🎧',
+    thumbs: ['🎧','🔊','🔋','📦'],
+    priceNow: 49999, priceOld: 65000,
+    ratingVal: 4.8, ratingCount: '1,500', sold: '800+',
+    variant1Label: 'Color', variant1: ['Black ✓','Silver','Midnight Blue'],
+    variant2Label: null, variant2: [],
+    stock: 'In Stock · 41 remaining',
+    warranty: '1-Year Sony Warranty',
+    seller: 'Sony Pakistan Official', sellerInit: 'S',
+    description: `<h3>About This Product</h3><p>The Sony WH-1000XM5 sets a new standard in noise cancellation with eight microphones and two processors working together to deliver exceptional silence.</p><h3>Key Features</h3><ul><li>Industry-leading noise cancellation with 8 mics & 2 processors</li><li>30-hour battery life with 3-min quick charge (3hrs playback)</li><li>Multipoint connection for 2 devices simultaneously</li><li>360 Reality Audio certified</li><li>Speak-to-Chat pauses music when you talk</li><li>Comfortable over-ear design with soft fabric cushioning</li></ul>`,
+    specs: [
+      ['Driver','30mm'],
+      ['Frequency Response','4–40,000 Hz'],
+      ['Battery Life','30 hours (NC on)'],
+      ['Charging','USB-C, 3.5 hrs full charge'],
+      ['Quick Charge','3 min = 3 hrs playback'],
+      ['Bluetooth','5.2'],
+      ['Codec','SBC, AAC, LDAC'],
+      ['Weight','250g'],
+      ['Foldable','Yes'],
+      ['Mic','8 mics total'],
+    ],
+    related: ['iphone-15-pro','samsung-s24','casio-gshock','gopro-hero12','hp-pavilion'],
+  },
+  'dyson-v15': {
+    brand: 'Dyson',
+    title: 'Dyson V15 Detect Absolute Cordless Vacuum Cleaner',
+    emoji: '🌀',
+    thumbs: ['🌀','🏠','🔋','📦'],
+    priceNow: 85000, priceOld: 99000,
+    ratingVal: 4.9, ratingCount: '445', sold: '220+',
+    variant1Label: 'Color', variant1: ['Yellow/Nickel ✓','Purple/Gold'],
+    variant2Label: null, variant2: [],
+    stock: 'In Stock · 12 remaining',
+    warranty: '2-Year Dyson Warranty',
+    seller: 'Dyson Official', sellerInit: 'D',
+    description: `<h3>About This Product</h3><p>The Dyson V15 Detect uses a laser to illuminate hidden dust on hard floors and intelligently adapts suction power based on the amount of dirt detected.</p><h3>Key Features</h3><ul><li>Laser slim fluffy cleaner head reveals microscopic dust</li><li>Piezo sensor counts and measures dust particles</li><li>Up to 60 min run time</li><li>HEPA filtration traps 99.99% of particles</li><li>LCD screen shows remaining run time and performance mode</li></ul>`,
+    specs: [
+      ['Suction Power','230 AW'],
+      ['Battery Life','Up to 60 min'],
+      ['Dustbin Capacity','0.77L'],
+      ['Weight','3.1 kg'],
+      ['Filtration','HEPA (99.99%)'],
+      ['Charging Time','4.5 hrs'],
+      ['Bin Ejection','Hygienic point-and-shoot'],
+    ],
+    related: ['sony-xm5','casio-gshock','instant-pot','hp-pavilion','iphone-15-pro'],
+  },
+  'casio-gshock': {
+    brand: 'Casio',
+    title: 'Casio G-Shock GA-2100 CasiOak Mens Watch Black',
+    emoji: '⌚',
+    thumbs: ['⌚','⌚','📦','🔋'],
+    priceNow: 18500, priceOld: 23000,
+    ratingVal: 4.7, ratingCount: '1,200', sold: '900+',
+    variant1Label: 'Color', variant1: ['All Black ✓','Black/Red','Olive Green','White'],
+    variant2Label: null, variant2: [],
+    stock: 'In Stock',
+    warranty: '2-Year Casio Warranty',
+    seller: 'Casio Pakistan', sellerInit: 'C',
+    description: `<h3>About This Product</h3><p>The G-Shock GA-2100 "CasiOak" is the cult-favourite timepiece beloved worldwide for its slim octagonal bezel design and robust G-Shock toughness.</p><h3>Key Features</h3><ul><li>Carbon core guard structure for extreme protection</li><li>200M water resistance</li><li>World time: 31 time zones</li><li>Shock resistant & magnetic resistant</li><li>Stopwatch, countdown timer, 5 daily alarms</li><li>Moon phase data display</li></ul>`,
+    specs: [
+      ['Case Size','45.4 × 43.3 × 11.8 mm'],
+      ['Weight','51g'],
+      ['Water Resistance','200M'],
+      ['Display','Analog + Digital'],
+      ['Battery','CR2016 (~3 yrs)'],
+      ['Functions','World time, stopwatch, alarm, moon data'],
+    ],
+    related: ['nike-air-max','levis-511','sony-xm5','iphone-15-pro','gopro-hero12'],
+  },
+  'instant-pot': {
+    brand: 'Instant Pot',
+    title: 'Instant Pot Duo 7-in-1 Electric Pressure Cooker 6Qt',
+    emoji: '🍲',
+    thumbs: ['🍲','🍳','📦','⚡'],
+    priceNow: 22000, priceOld: 28000,
+    ratingVal: 4.6, ratingCount: '3,400', sold: '2.1k+',
+    variant1Label: 'Size', variant1: ['3Qt','6Qt ✓','8Qt'],
+    variant2Label: null, variant2: [],
+    stock: 'In Stock',
+    warranty: '1-Year Instant Pot Warranty',
+    seller: 'Kitchen Pro Store', sellerInit: 'K',
+    description: `<h3>About This Product</h3><p>The Instant Pot Duo is the world's best-selling multi-cooker, replacing 7 kitchen appliances in one smart device.</p><h3>7-in-1 Functions</h3><ul><li>Pressure Cooker, Slow Cooker, Rice Cooker</li><li>Yogurt Maker, Steamer, Sauté Pan</li><li>Food Warmer</li><li>Cooks up to 70% faster than traditional methods</li><li>14 one-touch smart programs</li><li>Safe lid detection & overheat protection</li></ul>`,
+    specs: [
+      ['Capacity','6 Quart / 5.7L'],
+      ['Wattage','1000W'],
+      ['Pressure Settings','High & Low'],
+      ['Programs','14 smart programs'],
+      ['Material','Stainless steel inner pot'],
+      ['Dishwasher Safe','Inner pot & lid'],
+    ],
+    related: ['dyson-v15','casio-gshock','levis-511','samsung-s24','sony-xm5'],
+  },
+  'levis-511': {
+    brand: "Levi's",
+    title: "Levi's 511 Slim Fit Jeans Dark Blue Stretch Denim",
+    emoji: '👖',
+    thumbs: ['👖','👗','📦','🏷️'],
+    priceNow: 8999, priceOld: 11999,
+    ratingVal: 4.8, ratingCount: '2,800', sold: '3.2k+',
+    variant1Label: 'Waist', variant1: ['30','32 ✓','34','36'],
+    variant2Label: 'Length', variant2: ['30','32 ✓','34'],
+    stock: 'In Stock',
+    warranty: '3-Month Warranty',
+    seller: "Levi's Official Store", sellerInit: 'L',
+    description: `<h3>About This Product</h3><p>The Levi's 511 Slim Fit Jeans are a modern classic — slim through the thigh with a narrow leg opening, made with stretch denim for all-day comfort.</p><h3>Key Features</h3><ul><li>Slim fit through seat and thigh</li><li>Stretch denim for comfort and movement</li><li>Classic 5-pocket styling</li><li>Cotton blend fabric</li><li>Machine washable</li></ul>`,
+    specs: [
+      ['Fit','Slim'],
+      ['Material','99% Cotton, 1% Elastane'],
+      ['Rise','Mid Rise'],
+      ['Closure','Button fly'],
+      ['Care','Machine wash cold'],
+      ['Country','Bangladesh'],
+    ],
+    related: ['nike-air-max','casio-gshock','dyson-v15','instant-pot','gopro-hero12'],
+  },
+  'gopro-hero12': {
+    brand: 'GoPro',
+    title: 'GoPro HERO12 Black Action Camera 5.3K60',
+    emoji: '📷',
+    thumbs: ['📷','🎥','🔋','📦'],
+    priceNow: 95000, priceOld: 115000,
+    ratingVal: 4.9, ratingCount: '987', sold: '500+',
+    variant1Label: 'Bundle', variant1: ['Camera Only ✓','+ 64GB SD Card','+ Accessories Kit'],
+    variant2Label: null, variant2: [],
+    stock: 'In Stock · 8 remaining',
+    warranty: '1-Year GoPro Warranty',
+    seller: 'GoPro Official', sellerInit: 'G',
+    description: `<h3>About This Product</h3><p>The GoPro HERO12 Black is the ultimate action camera with stunning 5.3K60 video, HyperSmooth 6.0 stabilization and all-new HDR video.</p><h3>Key Features</h3><ul><li>5.3K60 + 4K120 video resolution</li><li>27MP photos</li><li>HyperSmooth 6.0 video stabilization</li><li>HDR video & photo</li><li>Waterproof to 10m without housing</li><li>Up to 70% longer battery life vs HERO11</li><li>Webcam & live streaming compatible</li></ul>`,
+    specs: [
+      ['Video','5.3K60, 4K120, 2.7K240, 1080p240'],
+      ['Photo','27MP'],
+      ['Stabilization','HyperSmooth 6.0'],
+      ['Waterproof','10m'],
+      ['Display','Front + rear touch screens'],
+      ['Battery','Enduro 1720 mAh'],
+      ['Storage','microSD up to 1TB'],
+      ['Weight','154g (with frame)'],
+    ],
+    related: ['iphone-15-pro','samsung-s24','sony-xm5','casio-gshock','hp-pavilion'],
+  },
+};
+
+// Fallback for unknown slugs
+const defaultProduct = products['iphone-15-pro'];
+
+// ─── INIT ────────────────────────────────────────────────────────────────────
+function getSlug() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get('p') || 'iphone-15-pro';
+}
+
+let currentProduct = null;
+let currentQty = 1;
+let cartCount = 0;
+let cartTotal = 0;
+let newItemId = 1;
+const cartEmptyMsg = '<p style="text-align:center; color:var(--text-muted); margin-top:40px; font-size:14px;">Your cart is empty</p>';
+
+function loadProduct() {
+  const slug = getSlug();
+  const p = products[slug] || defaultProduct;
+  currentProduct = p;
+
+  // Page title
+  document.title = p.title + ' — Bazaar';
+
+  // Breadcrumb
+  document.getElementById('bc-name').textContent = p.title.length > 50 ? p.title.slice(0, 50) + '…' : p.title;
+
+  // Gallery
+  document.getElementById('mainEmoji').textContent = p.emoji;
+  const thumbRow = document.getElementById('thumbRow');
+  thumbRow.innerHTML = '';
+  p.thumbs.forEach((t, i) => {
+    const div = document.createElement('div');
+    div.className = 'thumb' + (i === 0 ? ' active' : '');
+    div.textContent = t;
+    div.onclick = () => {
+      document.getElementById('mainEmoji').textContent = t;
+      document.querySelectorAll('.thumb').forEach(x => x.classList.remove('active'));
+      div.classList.add('active');
+    };
+    thumbRow.appendChild(div);
+  });
+
+  // Info
+  document.getElementById('piBrand').textContent = p.brand;
+  document.getElementById('piTitle').textContent = p.title;
+  document.getElementById('piRatingVal').textContent = p.ratingVal;
+  document.getElementById('piRatingCount').textContent = '(' + p.ratingCount + ' reviews)';
+  document.getElementById('piSold').textContent = p.sold + ' sold';
+  document.getElementById('revAvg').textContent = p.ratingVal;
+  document.getElementById('revTotal').textContent = p.ratingCount + ' ratings';
+
+  // Price
+  document.getElementById('piPriceNow').textContent = 'Rs. ' + p.priceNow.toLocaleString();
+  if (p.priceOld) {
+    document.getElementById('piPriceOld').textContent = 'Rs. ' + p.priceOld.toLocaleString();
+    const pct = Math.round((1 - p.priceNow / p.priceOld) * 100);
+    document.getElementById('piDiscount').textContent = '-' + pct + '%';
+    document.getElementById('piSaving').textContent = 'You save Rs. ' + (p.priceOld - p.priceNow).toLocaleString() + '!';
+    document.getElementById('piPriceOld').style.display = '';
+    document.getElementById('piDiscount').style.display = '';
+  } else {
+    document.getElementById('piPriceOld').style.display = 'none';
+    document.getElementById('piDiscount').style.display = 'none';
+    document.getElementById('piSaving').textContent = '';
+  }
+
+  // Variants
+  const s1 = document.getElementById('storageSection');
+  const pills1 = document.getElementById('storagePills');
+  if (p.variant1 && p.variant1.length) {
+    document.getElementById('variantLabel1').textContent = p.variant1Label;
+    pills1.innerHTML = '';
+    p.variant1.forEach(v => {
+      const btn = document.createElement('div');
+      btn.className = 'vpill' + (v.includes('✓') ? ' selected' : '');
+      btn.textContent = v.replace(' ✓','');
+      btn.onclick = () => { document.querySelectorAll('#storagePills .vpill').forEach(x => x.classList.remove('selected')); btn.classList.add('selected'); };
+      pills1.appendChild(btn);
+    });
+    s1.style.display = '';
+  } else { s1.style.display = 'none'; }
+
+  const s2 = document.getElementById('colorSection');
+  const pills2 = document.getElementById('colorPills');
+  if (p.variant2 && p.variant2.length) {
+    pills2.innerHTML = '';
+    p.variant2.forEach(v => {
+      const btn = document.createElement('div');
+      btn.className = 'vpill' + (v.includes('✓') ? ' selected' : '');
+      btn.textContent = v.replace(' ✓','');
+      btn.onclick = () => { document.querySelectorAll('#colorPills .vpill').forEach(x => x.classList.remove('selected')); btn.classList.add('selected'); };
+      pills2.appendChild(btn);
+    });
+    s2.style.display = '';
+  } else { s2.style.display = 'none'; }
+
+  // Stock & warranty
+  document.getElementById('stockInfo').textContent = '✓ ' + p.stock;
+  document.getElementById('warrantyLabel').textContent = p.warranty;
+
+  // Seller
+  document.getElementById('sellerName').textContent = p.seller;
+  document.getElementById('sellerAvatar').textContent = p.sellerInit;
+
+  // Description
+  document.getElementById('descContent').innerHTML = p.description;
+
+  // Specs
+  const specsEl = document.getElementById('specsTable');
+  specsEl.innerHTML = p.specs.map(([k, v]) =>
+    `<div class="spec-row"><div class="spec-key">${k}</div><div class="spec-val">${v}</div></div>`
+  ).join('');
+
+  // Related
+  const grid = document.getElementById('relatedGrid');
+  grid.innerHTML = '';
+  const relKeys = p.related || Object.keys(products).filter(k => k !== getSlug()).slice(0, 5);
+  relKeys.forEach(key => {
+    const rp = products[key];
+    if (!rp) return;
+    const pct = rp.priceOld ? Math.round((1 - rp.priceNow / rp.priceOld) * 100) : 0;
+    const card = document.createElement('div');
+    card.className = 'product-card';
+    card.onclick = () => { window.location.href = 'bazaar-product-detail.html?p=' + key; };
+    card.innerHTML = `
+      <div class="pc-img">${rp.emoji}${pct ? `<span class="pc-badge badge-sale">-${pct}%</span>` : ''}</div>
+      <div class="pc-info">
+        <div class="pc-name">${rp.title}</div>
+        <div class="pc-price">
+          <span class="price-now">Rs. ${rp.priceNow.toLocaleString()}</span>
+          ${rp.priceOld ? `<span class="price-old">Rs. ${rp.priceOld.toLocaleString()}</span>` : ''}
+        </div>
+        <div class="pc-rating"><span class="stars">★★★★★</span> ${rp.ratingVal}</div>
+      </div>
+      <button class="add-cart" onclick="event.stopPropagation();addToCart('${rp.title}','Rs. ${rp.priceNow.toLocaleString()}','${rp.emoji}')">🛒 Add to Cart</button>`;
+    grid.appendChild(card);
+  });
+}
+
+// ─── QTY ─────────────────────────────────────────────────────────────────────
+function changeQty(delta) {
+  currentQty = Math.max(1, Math.min(10, currentQty + delta));
+  document.getElementById('qtyVal').value = currentQty;
+}
+
+// ─── CART ─────────────────────────────────────────────────────────────────────
+function handleAddToCart() {
+  const p = currentProduct;
+  addToCart(p.title, 'Rs. ' + p.priceNow.toLocaleString(), p.emoji);
+}
+
+function addToCart(name, price, emoji) {
+  cartCount++;
+  const priceNum = parseInt(price.replace(/[^0-9]/g, ''));
+  cartTotal += priceNum;
+
+  document.getElementById('cartCount').textContent = cartCount;
+  document.getElementById('cartItemCount').textContent = cartCount;
+  document.getElementById('cartTotal').textContent = 'Rs. ' + cartTotal.toLocaleString();
+
+  const body = document.getElementById('cartBody');
+  if (cartCount === 1) body.innerHTML = '';
+
+  const item = document.createElement('div');
+  item.className = 'cart-item';
+  const itemId = 'ci-' + newItemId;
+  item.id = itemId;
+  item.innerHTML = `
+    <div class="ci-emoji">${emoji}</div>
+    <div class="ci-info">
+      <div class="ci-name">${name}</div>
+      <div class="ci-price">${price}</div>
+    </div>
+    <button class="ci-remove" onclick="removeCartItem('${itemId}', ${priceNum})">🗑</button>`;
+  body.appendChild(item);
+  newItemId++;
+
+  showNotif('🛒 ' + name.slice(0, 25) + '... added!');
+  openCart();
+}
+
+function removeCartItem(id, price) {
+  const el = document.getElementById(id);
+  if (el) {
+    el.remove();
+    cartCount = Math.max(0, cartCount - 1);
+    cartTotal = Math.max(0, cartTotal - price);
+    document.getElementById('cartCount').textContent = cartCount;
+    document.getElementById('cartItemCount').textContent = cartCount;
+    document.getElementById('cartTotal').textContent = 'Rs. ' + cartTotal.toLocaleString();
+    if (cartCount === 0) document.getElementById('cartBody').innerHTML = cartEmptyMsg;
+    showNotif('🗑 Removed from cart');
+  }
+}
+
+function openCart() {
+  document.getElementById('cartSidebar').classList.add('open');
+  document.getElementById('dim').classList.add('open');
+}
+function closeCart() {
+  document.getElementById('cartSidebar').classList.remove('open');
+  document.getElementById('dim').classList.remove('open');
+}
+
+// ─── TABS ─────────────────────────────────────────────────────────────────────
+function switchTab(id, el) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('tab-' + id).classList.add('active');
+}
+
+// ─── NOTIFICATION ─────────────────────────────────────────────────────────────
+let notifTimer;
+function showNotif(msg) {
+  const n = document.getElementById('notif');
+  n.textContent = msg;
+  n.classList.add('show');
+  clearTimeout(notifTimer);
+  notifTimer = setTimeout(() => n.classList.remove('show'), 2800);
+}
+
+// ─── RUN ──────────────────────────────────────────────────────────────────────
+loadProduct();
+</script>
+</body>
+</html>
